@@ -15,13 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.documentation import include_docs_urls
+from rest_framework_swagger.views import get_swagger_view
 from rest_framework import routers
 from todo.urls import router as todo_router
+from user_management.urls import router as user_router
 
 router = routers.DefaultRouter()
 router.registry.extend(todo_router.registry)
+router.registry.extend(user_router.registry)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('api-auth/', include('dj_rest_auth.urls')),
+    path('api-user/', include('dj_rest_auth.urls')),
+    path('api/docs/', include_docs_urls(title='Todo App API')),
+    path('api/swagger-docs/', get_swagger_view(title='Todo App API'))
 ]
